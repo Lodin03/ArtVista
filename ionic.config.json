@@ -1,0 +1,7 @@
+{
+  "name": "TDS200_h24_27",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue-vite"
+}
