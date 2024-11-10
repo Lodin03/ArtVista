@@ -4,6 +4,9 @@ import router from './router';
 
 import { IonicVue } from '@ionic/vue';
 
+// Importing firebase app
+import { initializeApp } from "firebase/app";
+
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/vue/css/core.css';
 
@@ -20,19 +23,22 @@ import '@ionic/vue/css/text-transformation.css';
 import '@ionic/vue/css/flex-utils.css';
 import '@ionic/vue/css/display.css';
 
-/**
- * Ionic Dark Mode
- * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
- */
-
-/* @import '@ionic/vue/css/palettes/dark.always.css'; */
-/* @import '@ionic/vue/css/palettes/dark.class.css'; */
-import '@ionic/vue/css/palettes/dark.system.css';
-
 /* Theme variables */
 import './theme/variables.css';
+
+// Initialize my Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyDBp143mVtjTF7a73l2dHczlqe19RnAlSM",
+  authDomain: "artvista-822c0.firebaseapp.com",
+  projectId: "artvista-822c0",
+  storageBucket: "artvista-822c0.firebasestorage.app",
+  messagingSenderId: "326471264345",
+  appId: "1:326471264345:web:059cc38ecb97575f71a948",
+  measurementId: "G-44ERD8PHP9"
+};
+
+// Initialize the Firebase app
+initializeApp(firebaseConfig)
 
 const app = createApp(App)
   .use(IonicVue)
