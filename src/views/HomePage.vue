@@ -4,6 +4,7 @@ import { ref } from 'vue';
 import { Artwork } from '@/interfaces/Artwork';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
 
+// JUST A TEST TO SEE GIT COMMIT WORK
 const db = getFirestore();
 const artworks = ref<Artwork[]>([]); 
 
