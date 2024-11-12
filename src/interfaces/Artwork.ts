@@ -4,6 +4,7 @@ export interface Artwork {
     abstract: string;
     yearCreated: string;
     imageURL: string;
+    hashtags: string[];
     artist: {
         country: string,
         name: string,
@@ -11,5 +12,4 @@ export interface Artwork {
         yearDead: number,
         about: string
     }
-    hashtags: string[]
 }

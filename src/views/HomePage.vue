@@ -1,8 +1,11 @@
 <script setup lang="ts">
-import { onIonViewDidEnter, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonGrid, IonRow, IonCol, IonCard, IonImg, IonCardHeader, IonCardTitle, IonCardContent, IonText, IonCardSubtitle, IonChip, IonBadge } from '@ionic/vue';
+import { onIonViewDidEnter, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonGrid, IonRow, IonCol, IonCard, IonImg, IonCardHeader, IonCardTitle, IonCardContent, IonText, IonCardSubtitle, IonButton } from '@ionic/vue';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router'; 
 import { Artwork } from '@/interfaces/Artwork';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
+
+const router = useRouter()
 
 const db = getFirestore();
 const artworks = ref<Artwork[]>([]); 
@@ -22,6 +25,11 @@ const fetchArtworks = async () => {
 onIonViewDidEnter(() => {
   fetchArtworks();
 });
+
+// Gives artworkId of type Artwork['id'] (which is a string)
+const navigateToArtworkDetails = (artworkId: Artwork['id']) => {
+  router.push(`/artwork/${artworkId}`);
+};
 </script>
 
 <template>
@@ -30,13 +38,26 @@ onIonViewDidEnter(() => {
       <ion-toolbar color="primary"> <!-- Burgundy color, changed color in variables.css-->
         <ion-title>Art Vista</ion-title>
       </ion-toolbar>
+
+      <!-- TODO: Fikse login funksjon, med v-if som sjekker displayer basert på login/logout
+      <ion-toolbar>
+        <ion-card-subtitle>
+          <ion-text>Login</ion-text>
+          <ion-button></ion-button>
+          </ion-card-subtitle>
+
+        <ion-card-subtitle>
+          <ion-text>Logout</ion-text>
+          <ion-button></ion-button>
+        </ion-card-subtitle>
+      </ion-toolbar>-->
     </ion-header>
 
     <ion-content :fullscreen="true">
       <ion-grid>
         <ion-row>
           <!-- Each column will take up 12 units on mobile and 4 units on web (large screens), so there can be displayed max 1 artwork (ion-card) per row for mobile devices and 3 for web -->
-          <ion-col v-for="artwork in artworks" :key="artwork.id" size="12" size-lg="4" :router-link="'/artwork/' + artwork.id"> 
+          <ion-col v-for="artwork in artworks" :key="artwork.id" size="12" size-lg="4" @click="navigateToArtworkDetails(artwork.id)"> 
             <ion-card class="artwork-card">
               <ion-img :src="artwork.imageURL" :alt="artwork.title + ' image'" class="artwork-image"></ion-img>
               <ion-card-header class="artwork-header">
