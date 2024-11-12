@@ -8,7 +8,8 @@ export interface Artwork {
         country: string,
         name: string,
         yearBorn: number,
-        yearDead: number 
+        yearDead: number,
+        about: string
     }
     hashtags: string[]
 }
