@@ -23,7 +23,7 @@ export const authService = {
     },
 
     async currentUser() {
-        return await getAuth().currentUser;
+        return getAuth().currentUser;
     },
 
     async signinWithGoogle() {

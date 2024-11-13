@@ -12,20 +12,20 @@ http://ionicframework.com/docs/theming/ */
     --ion-color-primary-tint: #9e0033;
   
     /** secondary **/
-    --ion-color-secondary: #3dc2ff;
-    --ion-color-secondary-rgb: 61, 194, 255;
+    --ion-color-secondary: #D4AF37; /* Muted Gold */
+    --ion-color-secondary-rgb: 212, 175, 55;
     --ion-color-secondary-contrast: #ffffff;
     --ion-color-secondary-contrast-rgb: 255, 255, 255;
-    --ion-color-secondary-shade: #36abe0;
-    --ion-color-secondary-tint: #50c8ff;
+    --ion-color-secondary-shade: #B3882E;  /* Shade (darker tone of gold) */
+    --ion-color-secondary-tint: #E0B75F; /* Tint (lighter tone of gold) */
   
     /** tertiary **/
-    --ion-color-tertiary: #5260ff;
-    --ion-color-tertiary-rgb: 82, 96, 255;
+    --ion-color-tertiary: #6A7FDB;  /* Slate Blue */
+    --ion-color-tertiary-rgb: 106, 127, 219;
     --ion-color-tertiary-contrast: #ffffff;
     --ion-color-tertiary-contrast-rgb: 255, 255, 255;
-    --ion-color-tertiary-shade: #4854e0;
-    --ion-color-tertiary-tint: #6370ff;
+    --ion-color-tertiary-shade: #5D6BC4; /* Darker tone of blue */
+    --ion-color-tertiary-tint: #7C8CFF; /* Lighter tone of blue */
   
     /** success **/
     --ion-color-success: #2dd36f;
@@ -90,19 +90,21 @@ http://ionicframework.com/docs/theming/ */
       --ion-color-primary-shade: #6a001a;
       --ion-color-primary-tint: #9e0033;
   
-      --ion-color-secondary: #50c8ff;
-      --ion-color-secondary-rgb: 80,200,255;
+      /** secondary **/
+      --ion-color-secondary: #D4AF37; /* Muted Gold */
+      --ion-color-secondary-rgb: 212, 175, 55;
       --ion-color-secondary-contrast: #ffffff;
-      --ion-color-secondary-contrast-rgb: 255,255,255;
-      --ion-color-secondary-shade: #46b0e0;
-      --ion-color-secondary-tint: #62ceff;
-  
-      --ion-color-tertiary: #6a64ff;
-      --ion-color-tertiary-rgb: 106,100,255;
+      --ion-color-secondary-contrast-rgb: 255, 255, 255;
+      --ion-color-secondary-shade: #B3882E;  /* Shade (darker tone of gold) */
+      --ion-color-secondary-tint: #E0B75F; /* Tint (lighter tone of gold) */
+    
+      /** tertiary **/
+      --ion-color-tertiary: #6A7FDB;  /* Slate Blue */
+      --ion-color-tertiary-rgb: 106, 127, 219;
       --ion-color-tertiary-contrast: #ffffff;
-      --ion-color-tertiary-contrast-rgb: 255,255,255;
-      --ion-color-tertiary-shade: #5d58e0;
-      --ion-color-tertiary-tint: #7974ff;
+      --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+      --ion-color-tertiary-shade: #5D6BC4; /* Darker tone of blue */
+      --ion-color-tertiary-tint: #7C8CFF; /* Lighter tone of blue */
   
       --ion-color-success: #2fdf75;
       --ion-color-success-rgb: 47,223,117;

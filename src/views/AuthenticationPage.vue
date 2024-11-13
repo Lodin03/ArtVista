@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { authService } from '@/services/firebase.authservice';
-import { IonButton, IonContent, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonPage, IonToggle } from '@ionic/vue';
+import { IonButton, IonContent, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonPage, IonToggle, IonHeader, IonToolbar, IonTitle, IonButtons, IonIcon } from '@ionic/vue';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { updateProfile } from "firebase/auth";
+import { home } from 'ionicons/icons'
 
 const router = useRouter();
 
@@ -70,41 +71,53 @@ const googlelogin = async () =>{
     }
 }
 
+// Navigates to the HomePage route (this is for users who are not logged in and just want to visit the HomePage)
+const goToHome = () => {
+    router.push('/home'); 
+}
+
 </script>
 
 <template>
     <ion-page>
+        <ion-header>
+            <ion-toolbar color="primary">
+                <ion-title>Artvista Authentication</ion-title>
+                <ion-buttons slot="end">
+                    <ion-button @click="goToHome">
+                        <ion-icon :icon="home" slot="icon-only" />
+                    </ion-button>
+                </ion-buttons>
+            </ion-toolbar>
+        </ion-header>
+
         <ion-content>
             <ion-list>
-                <ion-list-header>
-                    <ion-label>Camping Spots</ion-label>
-                </ion-list-header>
-
-                <img src="../assets/images/auth_img.png" alt="Authenticaion Image" class="auth-image">
+                <img src="../assets/images/auth_img.png" alt="Authentication Image" class="auth-image">
 
                 <ion-item lines="none">
-                    <ion-label class="label-mild">New user?</ion-label>
+                    <ion-label class="label-mild" color="dark" position="stacked">New user?</ion-label>
                     <ion-toggle color="dark" @ion-change="inRegisterMode = !inRegisterMode"></ion-toggle>
                 </ion-item> 
 
                 <hr />
 
                 <ion-item v-if="inRegisterMode">
-                    <ion-label class="label-mild" position="floating">Name</ion-label>
-                    <ion-input v-model="userDetails.displayName"></ion-input>
+                    <ion-label class="label-mild" position="stacked" color="dark">Name</ion-label>
+                    <ion-input type="text" v-model="userDetails.displayName"></ion-input>
                 </ion-item>
 
                 <ion-item>
-                    <ion-label class="label-mild" position="floating">Email</ion-label>
+                    <ion-label class="label-mild" position="stacked" color="dark">Email</ion-label>
                     <ion-input type="email" v-model="userDetails.email"></ion-input>
                 </ion-item>
 
                 <ion-item>
-                    <ion-label class="label-mild" position="floating">Password</ion-label>
+                    <ion-label class="label-mild" position="stacked" color="dark">Password</ion-label>
                     <ion-input type="password" v-model="userDetails.password"></ion-input>
                 </ion-item>
 
-                <ion-button v-if="inRegisterMode" @click="register" class="button-auth" fill="solid" color="dark" size="default">
+                <ion-button v-if="inRegisterMode" @click="register" class="button-auth" fill="solid" color="dark" size="default"> 
                     Register
                 </ion-button>
 
@@ -132,15 +145,17 @@ ion-list {
 }
 
 .button-auth {
-    margin-top: 50px;
-    margin-left: 10px;
-    margin-right: 10px;
+    margin-top: 2rem; 
+    margin-left: 1rem;
+    margin-right: 1rem;
 }
 .auth-image {
     width: 100%;  
-    max-width: 300px;  
+    max-width: 18rem;  
     height: auto; 
-    margin: 20px auto;  
+    margin: 1rem auto;  
     display: block; 
 }
+
+
 </style>

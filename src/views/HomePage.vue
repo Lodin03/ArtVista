@@ -5,11 +5,12 @@ import { useRouter } from 'vue-router';
 import { Artwork } from '@/interfaces/Artwork';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
 import { authService } from '@/services/firebase.authservice';
+import { User } from "firebase/auth";
 
 const router = useRouter()
 const db = getFirestore();
 const artworks = ref<Artwork[]>([]); 
-const currentUserData = ref(null)
+const currentUserData = ref<User | null>(null); // Set type to User | null because authService.currentUser() returns a User | null
 
 const fetchArtworks = async () => {
   const results: Artwork[] = []; 
@@ -56,16 +57,18 @@ const logout = async () => {
         <ion-title>Art Vista</ion-title>
       </ion-toolbar>
 
-      <ion-toolbar>
-        <ion-card-subtitle v-if="currentUserData">
-          <ion-text>Logged in user: {{ currentUserData.displayName }}</ion-text>
-          <ion-button @click="logout">Logout</ion-button>
-          </ion-card-subtitle>
-
-        <ion-card-subtitle v-else>
-          <ion-text>You have not logged in</ion-text>
-          <ion-button @click="login">Login</ion-button>
-        </ion-card-subtitle>
+      <ion-toolbar class="user-toolbar">
+        <ion-row class="user-info">
+          <ion-col size="auto">
+            <ion-text v-if="currentUserData">Logged in as: <b>{{ currentUserData.displayName }}</b></ion-text>
+            <ion-text v-else>You have not logged in</ion-text>
+          </ion-col>
+          
+          <ion-col size="auto">
+            <ion-button v-if="currentUserData" @click="logout" class="logout-btn" color="secondary">Logout</ion-button>
+            <ion-button v-else @click="login" class="login-btn" color="secondary">Login</ion-button>
+          </ion-col>
+        </ion-row>
       </ion-toolbar>
     </ion-header>
 
@@ -83,7 +86,7 @@ const logout = async () => {
 
               <ion-card-content class="artist-info">
                 <ion-card-subtitle>Artist:
-                  <ion-text class="artist-name">{{ artwork.artist.name }}</ion-text>
+                  <ion-text class="artist-name" color="secondary">{{ artwork.artist.name }}</ion-text>
                 </ion-card-subtitle>
               </ion-card-content>
 
@@ -100,6 +103,7 @@ const logout = async () => {
 ion-col {
   padding-bottom: 1.5rem;
 }
+
 .artwork-card {
   height: 100%;
   padding: 1rem;
@@ -117,15 +121,24 @@ ion-col {
   padding: 0.5rem;
 }
 
-/* Styling for the artist's name to make it visually prominent */
-.artist-name {
-  color: #ffffff;
+.artist-name { 
   cursor: pointer;
   text-decoration: underline;
 }
 
-.artist-name:hover {
-  color: #007acc; /* Darker shade on hover */
+.user-toolbar {
+  padding: 1rem 0 0 1rem;
+}
+
+.user-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.login-btn, .logout-btn {
+  padding-right: 1rem;
 }
 
 </style>
