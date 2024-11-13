@@ -4,11 +4,12 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router'; 
 import { Artwork } from '@/interfaces/Artwork';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import { authService } from '@/services/firebase.authservice';
 
 const router = useRouter()
-
 const db = getFirestore();
 const artworks = ref<Artwork[]>([]); 
+const currentUserData = ref(null)
 
 const fetchArtworks = async () => {
   const results: Artwork[] = []; 
@@ -22,7 +23,8 @@ const fetchArtworks = async () => {
   artworks.value = results;
 }
 
-onIonViewDidEnter(() => {
+onIonViewDidEnter(async () => {
+  currentUserData.value = await authService.currentUser();
   fetchArtworks();
 });
 
@@ -30,6 +32,21 @@ onIonViewDidEnter(() => {
 const navigateToArtworkDetails = (artworkId: Artwork['id']) => {
   router.push(`/artwork/${artworkId}`);
 };
+
+const login = () => {
+  router.push('/authentication')
+}
+
+const logout = async () => {
+  try {
+      await authService.logout();
+      currentUserData.value = null;
+      localStorage.removeItem("auth_token"); 
+      router.replace('/authentication');
+  } catch(error) {
+    console.error(error)
+  }
+}
 </script>
 
 <template>
@@ -39,18 +56,17 @@ const navigateToArtworkDetails = (artworkId: Artwork['id']) => {
         <ion-title>Art Vista</ion-title>
       </ion-toolbar>
 
-      <!-- TODO: Fikse login funksjon, med v-if som sjekker displayer basert på login/logout
       <ion-toolbar>
-        <ion-card-subtitle>
-          <ion-text>Login</ion-text>
-          <ion-button></ion-button>
+        <ion-card-subtitle v-if="currentUserData">
+          <ion-text>Logged in user: {{ currentUserData.displayName }}</ion-text>
+          <ion-button @click="logout">Logout</ion-button>
           </ion-card-subtitle>
 
-        <ion-card-subtitle>
-          <ion-text>Logout</ion-text>
-          <ion-button></ion-button>
+        <ion-card-subtitle v-else>
+          <ion-text>You have not logged in</ion-text>
+          <ion-button @click="login">Login</ion-button>
         </ion-card-subtitle>
-      </ion-toolbar>-->
+      </ion-toolbar>
     </ion-header>
 
     <ion-content :fullscreen="true">
