@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { authService } from '@/services/firebase.authservice';
-import { IonButton, IonContent, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonPage, IonToggle, IonHeader, IonToolbar, IonTitle, IonButtons, IonIcon } from '@ionic/vue';
+import { IonButton, IonContent, IonInput, IonItem, IonLabel, IonList, IonPage, IonToggle, IonHeader, IonToolbar, IonTitle, IonButtons, IonIcon } from '@ionic/vue';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { updateProfile } from "firebase/auth";
@@ -96,24 +96,24 @@ const goToHome = () => {
                 <img src="../assets/images/auth_img.png" alt="Authentication Image" class="auth-image">
 
                 <ion-item lines="none">
-                    <ion-label class="label-mild" color="dark" position="stacked">New user?</ion-label>
-                    <ion-toggle color="dark" @ion-change="inRegisterMode = !inRegisterMode"></ion-toggle>
+                    <ion-label color="dark" position="stacked">New user?</ion-label>
+                    <ion-toggle color="secondary" @ion-change="inRegisterMode = !inRegisterMode"></ion-toggle>
                 </ion-item> 
 
                 <hr />
 
                 <ion-item v-if="inRegisterMode">
-                    <ion-label class="label-mild" position="stacked" color="dark">Name</ion-label>
+                    <ion-label position="stacked" color="dark">Name</ion-label>
                     <ion-input type="text" v-model="userDetails.displayName"></ion-input>
                 </ion-item>
 
                 <ion-item>
-                    <ion-label class="label-mild" position="stacked" color="dark">Email</ion-label>
+                    <ion-label position="stacked" color="dark">Email</ion-label>
                     <ion-input type="email" v-model="userDetails.email"></ion-input>
                 </ion-item>
 
                 <ion-item>
-                    <ion-label class="label-mild" position="stacked" color="dark">Password</ion-label>
+                    <ion-label position="stacked" color="dark">Password</ion-label>
                     <ion-input type="password" v-model="userDetails.password"></ion-input>
                 </ion-item>
 
@@ -138,10 +138,6 @@ const goToHome = () => {
 ion-list {
     display: flex;
     flex-direction: column;
-}
-
-.label-mild {
-    --color: #8a8a8a !important;
 }
 
 .button-auth {
