@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onIonViewDidEnter, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonGrid, IonRow, IonCol, IonCard, IonImg, IonCardHeader, IonCardTitle, IonCardContent, IonText, IonCardSubtitle, IonButton } from '@ionic/vue';
+import { onIonViewDidEnter, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonGrid, IonRow, IonCol, IonCard, IonImg, IonCardHeader, IonCardTitle, IonCardContent, IonText, IonCardSubtitle, IonButton, IonLabel } from '@ionic/vue';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router'; 
 import { Artwork } from '@/interfaces/Artwork';
@@ -38,6 +38,10 @@ const login = () => {
   router.push('/authentication')
 }
 
+const navigateToUploadArtwork = () => {
+  router.push('/upload-artwork'); 
+}
+
 const logout = async () => {
   try {
       await authService.logout();
@@ -55,6 +59,7 @@ const logout = async () => {
     <ion-header :translucent="true">
       <ion-toolbar color="primary"> <!-- Burgundy color, changed color in variables.css-->
         <ion-title class="app-title">Art Vista</ion-title>
+        <ion-label @click="navigateToUploadArtwork" slot="end" class="upload-link">Upload Artwork</ion-label>
       </ion-toolbar>
 
       <ion-toolbar class="user-toolbar">
@@ -100,7 +105,14 @@ const logout = async () => {
 
 <style scoped>
 .app-title {
-  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.upload-link {
+  padding-right: 1rem;
+  font-weight: bold;
+  font-size: 1.25rem;
+  cursor: pointer;
 }
 
 .user-toolbar {

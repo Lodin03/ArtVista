@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { onIonViewDidEnter, IonPage, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonCol, IonImg, IonRow, IonChip, IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonText, IonIcon, IonButton, IonModal, IonList, IonItem, IonLabel, IonTextarea, IonListHeader, IonAvatar, } from '@ionic/vue';
+import { onIonViewDidEnter, IonPage, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonCol, IonImg, IonRow, IonChip, IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonText, IonIcon, IonButton, IonModal, IonList, IonItem, IonLabel, IonTextarea, IonListHeader, IonAvatar, IonNote } from '@ionic/vue';
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { getFirestore, getDoc, doc, setDoc } from 'firebase/firestore';
 import { getAuth, User } from 'firebase/auth';
 import { Artwork } from '@/interfaces/Artwork';
-import { chatboxOutline } from 'ionicons/icons';
+import { chatboxOutline, trashBinOutline } from 'ionicons/icons';
 
 const route = useRoute();
 
@@ -74,7 +74,7 @@ const fetchArtworks = async () => {
 
 const addNewComment = async () => {
   try {
-    const docRef = doc(db, "art_vista", id);  
+    const docRef = doc(db, 'art_vista', id);  
     // Non-null assertion operator for username and email, because page wont load if they are, based on onIOnViewDidEnter.
     // Username and email should never be empty, as you need to logged in with an user to access the page, but I added 'Anonymous', just to remove type check error message.
     const newComment = {
@@ -101,6 +101,47 @@ const addNewComment = async () => {
   }
 }
 
+const removeComment = async (commentId: number) => {
+    try {
+        const docRef = doc(db, 'art_vista', id)
+        const targetComment = artwork.value.comments.find(comment => comment.commentId === commentId)
+
+        // Checks if the comment exists in the current state. If not, it may have been deleted already 
+        // or failed to syncronize properly, so it handles synchronization issues between the firebase and the UI.
+        if (!targetComment) {
+            alert("Comment not found.");
+            return; 
+        }
+
+        // Ensures the user is still logged in, handling potential synchronization issues where the user's session or token may have expired.
+        if (!currentUserData.value) {
+            alert("User is not logged in")
+            return;
+        }
+
+        // Check if the logged-in user's email does not match the target comment's email
+        if (targetComment.email !== currentUserData.value.email) {
+            alert("You can't delete someone elses comment"); // Alert message
+            return; // Exit the function early
+        }
+
+        // Filters out the comment from the array of comments
+        const updatedComments = artwork.value.comments.filter(comment => comment.commentId != commentId);
+
+         // Reassign comment IDs to ensure they are sequential
+         updatedComments.forEach((comment, index) => {
+            comment.commentId = index + 1;  // Reassign commentId starting from 1
+        });
+
+        // Updates the db with the new list of comments
+        await setDoc(docRef, {comments: updatedComments}, {merge: true});
+        artwork.value.comments = updatedComments;
+        alert("Comment deleted!");
+    }
+    catch (error) {
+        console.log("Error removing comment", error)
+    }
+}
 
 </script>
 
@@ -151,25 +192,24 @@ const addNewComment = async () => {
             <ion-card>
                     <ion-list>
                         <ion-list-header>
-                            <ion-label>
+                            <ion-card-title>
                                 Comment section 
-                                <ion-icon :icon="chatboxOutline"></ion-icon>
-                            </ion-label>
+                                <ion-icon :icon="chatboxOutline" @click="isModalOpen=true"></ion-icon>
+                            </ion-card-title>
                         </ion-list-header>
 
                         <ion-item v-for="comment in artwork.comments" :key="comment.commentId">
                             <ion-avatar slot="start">
+                                <!-- Black avatar image -->
                                 <ion-img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAAAAACH5BAAAAAAALAAAAAABAAEAAAICTAEAOw==" alt="User Avatar"></ion-img>
                             </ion-avatar>
-                            <ion-label>
-                                <ion-text>
-                                    <b>{{comment.username}}</b>
-                                </ion-text>
-                                <ion-text>
-                                    <p>Kommentar #{{comment.commentId}}: {{comment.text}}</p>
-                                </ion-text>  
-                                 
-                            </ion-label>
+                        <ion-label>
+                            <ion-text class="username">{{comment.username}}</ion-text>
+                            <ion-note class="comment-text">
+                                Kommentar #{{comment.commentId}}: {{comment.text}}
+                                <ion-icon :icon="trashBinOutline" @click="removeComment(comment.commentId)" class="trash-bin"></ion-icon>
+                            </ion-note>
+                        </ion-label>
                         </ion-item>
                     </ion-list>
                 </ion-card>
@@ -216,4 +256,17 @@ const addNewComment = async () => {
 .ion-chip-padding {
     padding: 0.5rem;
 }
+
+.trash-bin {
+    padding-left: 0.25rem;
+}
+
+.username {
+  font-weight: bold;
+}
+
+.comment-text {
+  display: block;
+}
+
 </style>
