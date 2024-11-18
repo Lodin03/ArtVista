@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { onIonViewDidEnter, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonGrid, IonRow, IonCol, IonCard, IonImg, IonCardHeader, IonCardTitle, IonCardContent, IonText, IonCardSubtitle, IonButton, IonLabel } from '@ionic/vue';
+import { onIonViewDidEnter, loadingController, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonGrid, IonRow, IonCol, IonCard, IonImg, IonCardHeader, IonCardTitle, IonCardContent, IonText, IonCardSubtitle, IonButton, IonLabel, IonSearchbar, IonItem, IonSelect, IonSelectOption } from '@ionic/vue';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router'; 
 import { Artwork } from '@/interfaces/Artwork';
-import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, query, where } from 'firebase/firestore';
 import { authService } from '@/services/firebase.authservice';
 import { User } from "firebase/auth";
 
@@ -11,18 +11,70 @@ const router = useRouter()
 const db = getFirestore();
 const artworks = ref<Artwork[]>([]); 
 const currentUserData = ref<User | null>(null); // Set type to User | null because authService.currentUser() returns a User | null
+const originalArtworks = ref<Artwork[]>([]);
+const filteredArtworks = ref<Artwork[]>([]);
+const selectedCategory = ref(null);
 
 const fetchArtworks = async () => {
-  const results: Artwork[] = []; 
-  const artworksSnapshot = await getDocs(collection(db, 'art_vista'));
-
-  artworksSnapshot.forEach((doc) => {
-    const artworkData = { id: doc.id, ...doc.data()} as Artwork; 
-    results.push(artworkData);
+  const loading = await loadingController.create({
+    message: "Loading from Firebase...",
+    duration: 1000 // Loading indicator will automatically dismiss after 1 second
   });
 
-  artworks.value = results;
+  try {
+    await loading.present()
+
+    const results: Artwork[] = []; 
+    const artworksSnapshot = await getDocs(collection(db, 'art_vista'));
+
+    artworksSnapshot.forEach((doc) => {
+      const artworkData = { id: doc.id, ...doc.data()} as Artwork; 
+      results.push(artworkData);
+    });
+    artworks.value = results;
+    originalArtworks.value = results;
+    filteredArtworks.value = results;
+  } 
+  catch (error) {
+    console.error("Error fetching artworks: ", error);
+  } finally {
+    await loading.dismiss();
+  }
+  
 }
+
+const toggleSearch = (event:CustomEvent) => {
+  const searchText = (event.target as HTMLInputElement).value;
+  if (!searchText) {
+      artworks.value = filteredArtworks.value; // Returns all artworks if there is no search query
+    }
+    artworks.value = filteredArtworks.value.filter((artwork) =>
+      artwork.title.toLowerCase().includes(searchText.toLowerCase())
+    );
+};
+
+const fetchByCategory = async () => {
+    if (selectedCategory.value === 'all') {
+      artworks.value = originalArtworks.value;
+    } else {
+      const queryResults = query(
+        collection(db, 'art_vista'), 
+        where("category", "==", selectedCategory.value)
+        );
+      try {
+        const results: Artwork[] = [];
+        const querySnapshot = await getDocs(queryResults);
+        querySnapshot.forEach((doc) => {
+            results.push({ id: doc.id, ...doc.data() } as Artwork);
+        });
+        artworks.value = results;
+      } catch (error) {
+        console.error("Failed to fetch records by category:", error);
+      }
+    }
+    filteredArtworks.value = artworks.value;
+
+};
 
 onIonViewDidEnter(async () => {
   currentUserData.value = await authService.currentUser();
@@ -75,6 +127,22 @@ const logout = async () => {
           </ion-col>
         </ion-row>
       </ion-toolbar>
+
+      <ion-toolbar>
+         <ion-searchbar placeholder="Search Artworks By Name" @ionInput="toggleSearch($event)"></ion-searchbar>
+      </ion-toolbar> 
+
+      <ion-item>
+        <ion-label>Category</ion-label>
+        <ion-select placeholder="Select Category" v-model="selectedCategory" @ionChange="fetchByCategory">
+          <ion-select-option value="all">All</ion-select-option> 
+          <ion-select-option value="Portrait">Portrait</ion-select-option>
+          <ion-select-option value="Landscape">Landscape</ion-select-option>
+          <ion-select-option value="Architectural">Architectural</ion-select-option>
+          <ion-select-option value="Abstract">Abstract</ion-select-option>
+          <ion-select-option value="Religious">Religious</ion-select-option>
+        </ion-select>
+      </ion-item>
     </ion-header>
 
     <ion-content :fullscreen="true">

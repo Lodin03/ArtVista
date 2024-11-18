@@ -2,9 +2,10 @@ export interface Artwork {
     id: string,
     title: string;
     abstract: string;
-    yearCreated: string;
+    yearCreated: number;
     imageURL: string;
     hashtags: string[];
+    category: string;
     artist: {
         country: string;
         name: string;

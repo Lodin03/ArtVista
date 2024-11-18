@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onIonViewDidEnter, IonPage, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonCol, IonImg, IonRow, IonChip, IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonText, IonIcon, IonButton, IonModal, IonList, IonItem, IonLabel, IonTextarea, IonListHeader, IonAvatar, IonNote } from '@ionic/vue';
+import { onIonViewDidEnter, IonPage, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonCol, IonImg, IonRow, IonChip, IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonText, IonIcon, IonButton, IonModal, IonList, IonItem, IonLabel, IonTextarea, IonListHeader, IonAvatar, IonNote, IonCardSubtitle } from '@ionic/vue';
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { getFirestore, getDoc, doc, setDoc } from 'firebase/firestore';
@@ -19,9 +19,10 @@ const artwork = ref<Artwork>({
   id: '',  
   title: '',
   abstract: '',
-  yearCreated: '',
+  yearCreated: 0,
   imageURL: '',
   hashtags: [], 
+  category: '',
   artist: {
     country: '',
     name: '',
@@ -177,6 +178,17 @@ const removeComment = async (commentId: number) => {
 
                         <ion-card-content>
                             <ion-text>{{ artwork.abstract }}</ion-text>
+                            <div class="ion-padding-top">
+                                <ion-text>
+                                    <b>Category:</b> {{ artwork.category }}
+                                </ion-text>
+                            </div>
+                            <div>
+                                <ion-text>
+                                    <b>Year Created:</b> {{ artwork.yearCreated }}
+                                </ion-text>
+                            </div>
+                            
                         </ion-card-content>
 
                         <ion-row class="ion-chip-padding">
