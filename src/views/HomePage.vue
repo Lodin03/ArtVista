@@ -48,8 +48,11 @@ const toggleSearch = (event:CustomEvent) => {
   if (!searchText) {
       artworks.value = filteredArtworks.value; // Returns all artworks if there is no search query
     }
+
+    // Can search by either name of artwork or artist
     artworks.value = filteredArtworks.value.filter((artwork) =>
-      artwork.title.toLowerCase().includes(searchText.toLowerCase())
+      artwork.title.toLowerCase().includes(searchText.toLowerCase()) ||
+      artwork.artist.name.toLowerCase().includes(searchText.toLowerCase())
     );
 };
 
@@ -86,6 +89,10 @@ const navigateToArtworkDetails = (artworkId: Artwork['id']) => {
   router.push(`/artwork/${artworkId}`);
 };
 
+const navigateToArtistDetails = (artistId: Artwork['id']) => {
+  router.push(`/artist/${artistId}`); 
+}
+
 const login = () => {
   router.push('/authentication')
 }
@@ -109,7 +116,7 @@ const logout = async () => {
 <template>
   <ion-page>
     <ion-header :translucent="true">
-      <ion-toolbar color="primary"> <!-- Burgundy color, changed color in variables.css-->
+      <ion-toolbar color="primary" class="color-toolbar"> <!-- Burgundy color, changed color in variables.css-->
         <ion-title class="app-title">Art Vista</ion-title>
         <ion-label @click="navigateToUploadArtwork" slot="end" class="upload-link">Upload Artwork</ion-label>
       </ion-toolbar>
@@ -129,18 +136,19 @@ const logout = async () => {
       </ion-toolbar>
 
       <ion-toolbar>
-         <ion-searchbar placeholder="Search Artworks By Name" @ionInput="toggleSearch($event)"></ion-searchbar>
+         <ion-searchbar placeholder="Search Artworks By Artwork/Artist" @ionInput="toggleSearch($event)"></ion-searchbar>
       </ion-toolbar> 
 
-      <ion-item>
-        <ion-label>Category</ion-label>
+      <ion-item lines="none">
+        <ion-label><b>Category</b></ion-label>
         <ion-select placeholder="Select Category" v-model="selectedCategory" @ionChange="fetchByCategory">
           <ion-select-option value="all">All</ion-select-option> 
           <ion-select-option value="Portrait">Portrait</ion-select-option>
           <ion-select-option value="Landscape">Landscape</ion-select-option>
           <ion-select-option value="Architectural">Architectural</ion-select-option>
-          <ion-select-option value="Abstract">Abstract</ion-select-option>
+          <ion-select-option value="Emotional">Emotional</ion-select-option>
           <ion-select-option value="Religious">Religious</ion-select-option>
+          <ion-select-option value="Other">Other</ion-select-option>
         </ion-select>
       </ion-item>
     </ion-header>
@@ -159,7 +167,7 @@ const logout = async () => {
 
               <ion-card-content class="artist-info">
                 <ion-card-subtitle>Artist:
-                  <ion-text class="artist-name" color="secondary">{{ artwork.artist.name }}</ion-text>
+                  <ion-text class="artist-name" color="secondary" @click.stop="navigateToArtistDetails(artwork.id)">{{ artwork.artist.name }}</ion-text>
                 </ion-card-subtitle>
               </ion-card-content>
 
@@ -203,7 +211,6 @@ const logout = async () => {
   padding-right: 1rem;
 }
 
-
 .artwork-card {
   height: 100%;
   padding: 1rem;
@@ -217,6 +224,7 @@ const logout = async () => {
   object-fit: contain;
   object-position: center;
   margin-bottom: 1rem;
+  cursor: pointer;
 }
 
 .artwork-header, .artist-info {
@@ -227,7 +235,6 @@ const logout = async () => {
   cursor: pointer;
   text-decoration: underline;
 }
-
 
 ion-col {
   padding-bottom: 1.5rem;

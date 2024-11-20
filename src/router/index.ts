@@ -4,6 +4,7 @@ import HomePage from '../views/HomePage.vue'
 import ArtworkDetailsPage from '@/views/ArtworkDetailsPage.vue';
 import UploadArtworkPage from '@/views/UploadArtworkPage.vue';
 import AuthenticationPage from '@/views/AuthenticationPage.vue';
+import ArtistDetailsPage from '@/views/ArtistDetailsPage.vue';
 import { authService } from '@/services/firebase.authservice';
 
 const parseJwt = (token:string) => {
@@ -65,6 +66,12 @@ const routes: Array<RouteRecordRaw> = [
     name: 'UploadArtwork',
     component: UploadArtworkPage,
     beforeEnter: [authenticationRouterGuard] 
+  },
+  {
+    path: '/artist/:id',
+    name: 'ArtistDetails',
+    component: ArtistDetailsPage,
+    beforeEnter: [authenticationRouterGuard]
   }
 ]
 

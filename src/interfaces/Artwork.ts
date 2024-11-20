@@ -6,17 +6,19 @@ export interface Artwork {
     imageURL: string;
     hashtags: string[];
     category: string;
-    artist: {
-        country: string;
-        name: string;
-        yearBorn: number;
-        yearDead: number;
-        about: string;
-    };
+    artist: Artist;
     comments: Array<{
         commentId: number;
         username: string;
         email: string;
         text: string;
     }>;
+}
+
+export interface Artist {
+    name: string;
+    country: string;
+    yearBorn: number;
+    yearDead: number;
+    about: string;
 }

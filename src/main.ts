@@ -26,6 +26,8 @@ import '@ionic/vue/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 
+import { defineCustomElements } from '@ionic/pwa-elements/loader';
+
 // Initialize my Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyDBp143mVtjTF7a73l2dHczlqe19RnAlSM",
@@ -44,6 +46,7 @@ const app = createApp(App)
   .use(IonicVue)
   .use(router);
 
+defineCustomElements(window);
 router.isReady().then(() => {
   app.mount('#app');
 });

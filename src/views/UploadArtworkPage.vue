@@ -156,13 +156,16 @@ const postNewArtwork = async () => {
 const triggerCamera = async () => {
     const photo = await Camera.getPhoto({
         quality: 100,
+        correctOrientation: true,
         allowEditing: false,
+        width: 600,
+        height: 400,
         resultType: CameraResultType.Uri
     });
 
      if (photo.webPath) {
-        newArtwork.value.imageURL = photo.webPath;    
-    } 
+        newArtwork.value.imageURL = photo.webPath;
+    }
 }
 
 const removeImagePreview = () => {
@@ -217,14 +220,15 @@ const removeImagePreview = () => {
                         <ion-select-option value="Portrait">Portrait</ion-select-option>
                         <ion-select-option value="Landscape">Landscape</ion-select-option>
                         <ion-select-option value="Architectural">Architectural</ion-select-option>
-                        <ion-select-option value="Abstract">Abstract</ion-select-option>
+                        <ion-select-option value="Emotional">Emotional</ion-select-option>
                         <ion-select-option value="Religious">Religious</ion-select-option>
+                        <ion-select-option value="Other">Other</ion-select-option>
                     </ion-select>
                 </ion-item>
 
                 <ion-item>
                     <ion-label position="stacked">Hashtags</ion-label>
-                    <ion-input v-model="newHashtags" type="text"></ion-input>
+                    <ion-input v-model="newHashtags" type="text" placeholder="Enter your hashtag(s) here"></ion-input>
 
                     <ion-button slot="end" @click="addNewHashtag">
                         <ion-icon :icon="add"></ion-icon>

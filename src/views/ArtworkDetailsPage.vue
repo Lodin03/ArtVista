@@ -24,8 +24,8 @@ const artwork = ref<Artwork>({
   hashtags: [], 
   category: '',
   artist: {
-    country: '',
     name: '',
+    country: '',
     yearBorn: 0,
     yearDead: 0,
     about: '',
@@ -148,7 +148,7 @@ const removeComment = async (commentId: number) => {
 
 <template>
     <ion-page>
-        <ion-header :translucent="true">
+        <ion-header :translucent="true" v-if="artwork && !isLoadingArtwork">
             <ion-toolbar color="primary">
                 <ion-buttons slot="start">
                     <ion-back-button default-href="/"></ion-back-button>
@@ -173,7 +173,7 @@ const removeComment = async (commentId: number) => {
                 <ion-col>
                     <ion-card class="card-padding">
                         <ion-card-header>
-                            <ion-card-title color="dark"> {{ artwork.title }} </ion-card-title>
+                            <ion-card-title> {{ artwork.title }} </ion-card-title>
                         </ion-card-header>
 
                         <ion-card-content>
@@ -206,7 +206,7 @@ const removeComment = async (commentId: number) => {
                         <ion-list-header>
                             <ion-card-title>
                                 Comment section 
-                                <ion-icon :icon="chatboxOutline" @click="isModalOpen=true"></ion-icon>
+                                <ion-icon :icon="chatboxOutline" @click="isModalOpen=true" color="secondary"></ion-icon>
                             </ion-card-title>
                         </ion-list-header>
 
