@@ -19,8 +19,9 @@ const artist = ref<Artwork['artist']>({
     yearDead: 0,
     about: '', 
 });
-
+// Reactive variable to store artwork(s) by the artist
 const artistArtworks = ref<Artwork[]>([]); 
+
 // Reactive loading state
 const isLoadingArtist = ref(true);
 
@@ -34,7 +35,6 @@ onIonViewDidEnter(async () => {
   fetchArtistArtworks(artist.value.name);
 });
 
-// Fetch artist details from Firestore using the artwork document ID
 const fetchArtist = async () => {
     try {
         if (typeof id === 'string') {
@@ -109,7 +109,7 @@ const navigateToArtworkDetails = (artworkId: Artwork['id']) => {
 
             <ion-item>
               <ion-label>
-                <b>About: </b><ion-text>{{ artist.about }}</ion-text>
+                <b>About: </b> {{ artist.about }}
               </ion-label>
             </ion-item>
           </ion-list>

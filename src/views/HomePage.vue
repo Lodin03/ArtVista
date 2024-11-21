@@ -15,6 +15,11 @@ const originalArtworks = ref<Artwork[]>([]);
 const filteredArtworks = ref<Artwork[]>([]);
 const selectedCategory = ref(null);
 
+onIonViewDidEnter(async () => {
+  currentUserData.value = await authService.currentUser();
+  await fetchArtworks();
+});
+
 const fetchArtworks = async () => {
   const loading = await loadingController.create({
     message: "Loading from Firebase...",
@@ -51,8 +56,8 @@ const toggleSearch = (event:CustomEvent) => {
 
     // Can search by either name of artwork or artist
     artworks.value = filteredArtworks.value.filter((artwork) =>
-      artwork.title.toLowerCase().includes(searchText.toLowerCase()) ||
-      artwork.artist.name.toLowerCase().includes(searchText.toLowerCase())
+    artwork.title.toLowerCase().includes(searchText.toLowerCase()) ||
+    artwork.artist.name.toLowerCase().includes(searchText.toLowerCase())
     );
 };
 
@@ -79,11 +84,6 @@ const fetchByCategory = async () => {
 
 };
 
-onIonViewDidEnter(async () => {
-  currentUserData.value = await authService.currentUser();
-  fetchArtworks();
-});
-
 // Gives artworkId of type Artwork['id'] (which is a string)
 const navigateToArtworkDetails = (artworkId: Artwork['id']) => {
   router.push(`/artwork/${artworkId}`);
@@ -103,10 +103,10 @@ const navigateToUploadArtwork = () => {
 
 const logout = async () => {
   try {
-      await authService.logout();
-      currentUserData.value = null;
-      localStorage.removeItem("auth_token"); 
-      router.replace('/authentication');
+    await authService.logout();
+    currentUserData.value = null;
+    localStorage.removeItem("auth_token"); 
+    router.replace('/authentication');
   } catch(error) {
     console.error(error)
   }

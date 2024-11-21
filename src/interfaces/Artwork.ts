@@ -13,6 +13,7 @@ export interface Artwork {
         email: string;
         text: string;
     }>;
+    usersWhoLiked: string[];
 }
 
 export interface Artist {

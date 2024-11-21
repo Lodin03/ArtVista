@@ -30,7 +30,8 @@ const newArtwork = ref<Artwork>({
     yearDead: 0,
     about: '',
   },
-  comments: []  
+  comments: [],
+  usersWhoLiked: []
 });
 
 // Reactive variable to track if the artist already exists in the database
