@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>ArtVista</title>
+    <script type="text/javascript">
+      // Enkel redirect til hovedapplikasjonen
+      var segmentCount = 0;
+      var l = window.location;
+      var r = l.pathname.split('/');
+      
+      for (var i = 0; i < r.length; i++) {
+        if (r[i].length > 0) segmentCount++;
+      }
+      
+      if (segmentCount === 0) {
+        window.location.replace('/ArtVista/');
+      } else {
+        var path = '/ArtVista/';
+        for (var i = 1; i < r.length; i++) {
+          path += r[i] + '/';
+        }
+        window.location.replace(path);
+      }
+    </script>
+  </head>
+  <body>
+    <p>Redirecting to ArtVista...</p>
+  </body>
+</html> 
